@@ -1,0 +1,64 @@
+<aura:component>
+    <!-- List & Object Attributes -->
+    <aura:attribute name="selectedAccounts" type="List" default="[]" />
+    <aura:attribute name="selectedMaterials" type="List" default="[]" />
+    <aura:attribute name="contacts" type="List" default="[]" />
+    <aura:attribute name="user" type="User" />
+
+    <!-- Handle Attribute value changes -->
+    <aura:handler name="change" value="{!v.selectedAccounts}" action="{!c.handleAccountsChange}" />
+
+    <!-- Handle Object Lifecycle events -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <lightning:layout horizontalAlign="space">
+        <lightning:layoutItem size="6" padding="around-small">
+            <lightning:card title="Accounts" class="summary-container" >
+                <ul id="selectedAccountsList" class="slds-has-dividers_bottom-space slds-m-around_small slds-p-vertical_small">
+                    <aura:iteration items="{!v.selectedAccounts}" var="account">
+                        <li class="slds-item">
+                            <div class="slds-media slds-media_center">
+                                <div class="slds-media__figure">
+                                    <lightning:icon iconName="utility:approval" alternativeText="Contact" size="small" />
+                                </div>
+                                <div class="slds-media__body">
+                                    <p>{!account.Name}</p>
+
+                                    <aura:iteration items="{!account.Contacts}" var="contact">
+                                        <aura:if isTrue="{!contact.selected}">
+                                            <p>{!contact.Name} - {!contact.Email}</p>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </div>
+                            </div>
+                        </li>
+                    </aura:iteration>
+                
+                </ul>
+    
+            </lightning:card>
+            
+        </lightning:layoutItem>
+        <lightning:layoutItem size="6" padding="around-small">
+            <lightning:card title="Materials" class="summary-container">
+                <aura:if isTrue="{!v.selectedMaterials.length > 0}">
+                    <aura:iteration items="{!v.selectedMaterials}" var="material">
+                        <aura:if isTrue="{!material.Id != null}">
+                        <div id="{!material.Id+'_container'}" class="" >
+                            <div class="">
+                                <img id="{!material.Id}" src="{!'/sfc/servlet.shepherd/version/download/' + material.Id}" style="height: 100%;" />
+                            </div>
+                        </div>
+                        </aura:if>
+                    </aura:iteration>
+                <aura:set attribute="else">
+                    <div class="slds-text-title_caps slds-align_absolute-center" style="min-height: 300px;" >
+                        No Materials Selected.
+                    </div>  
+                </aura:set>
+            
+                </aura:if>                
+            </lightning:card>
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>	

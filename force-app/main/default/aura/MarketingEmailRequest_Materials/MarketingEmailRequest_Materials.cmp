@@ -1,0 +1,261 @@
+<aura:component>
+    <!-- String Attributes -->
+    <aura:attribute name="selectedTemplate" type="String" default="template1" />
+    <aura:attribute name="emailHeaderMessage" type="String" default="" />
+    <aura:attribute name="dragElementId" type="String" default="" />
+
+    <!-- List & Object Attributes -->
+    <aura:attribute name="templates" type="List" default="[]" />
+    <aura:attribute name="materials" type="List" default="[]" />
+    <aura:attribute name="selectedMaterials" type="List" default="[{}]" />
+    <aura:attribute name="user" type="User" />
+
+    <!-- Handle Component Lifecycle events -->
+    <aura:handler name="init" value="this" action="{!c.doInit}" />
+
+    <!-- Register events component will fire -->
+    <aura:registerEvent name="bf_event_GetListData" type="c:bf_event_GetListData" />   
+
+    <!-- Public methods -->
+    <aura:method name="getSelectedMaterials" action="{!c.getSelectedMaterials}" access="PUBLIC">
+    </aura:method>
+
+    <lightning:layout verticalAlign="stretch" horizontalAlign="space">
+        <lightning:layoutItem size="2" class="slds-hide">
+            <div class="slds-page-header glowing-box slds-m-around_small">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media slds-media_center">
+                            <div class="slds-media__figure">
+                                <lightning:icon iconName="utility:builder" alternativeText="Templates" size="small" />
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h1 class="slds-p-top_x-small">
+                                            <span class="slds-page-header__title slds-truncate slds-text-title_caps" title="Templates">Templates</span>
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <fieldset class="slds-form-element slds-m-left_small">
+                <div class="slds-form-element__control">
+                    <div class="slds-visual-picker slds-visual-picker_vertical" style="width: 15rem; height: 10rem;">
+                        <input type="radio" id="template1-visual-picker" checked="true" name="options" value="template1" onclick="{!c.handleTemplate1Selected}" />
+                        <label for="template1-visual-picker">
+                            <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center" style="background: #f3f2f2; width: 15rem; height: 10rem;">
+                                <span>
+                                    <!--<img id="template1" aura:id="template1" data-item-key="template1" src="{!$Resource.MarketingEmailRequestResources + '/MarketingEmailRequestResources/templates/template1.png'}"  />-->
+                                </span>
+                            </span>
+                            <span aura:id="template1_check" class="slds-icon_container slds-visual-picker__text-check">
+                                <c:svg class="slds-icon slds-icon-text-check slds-icon_x-small slds-icon_cream" ariaHidden="true" xlinkHref="{!$Resource.SLDS232 + '/assets/icons/utility-sprite/svg/symbols.svg#check'}" />
+                            </span>
+                        </label>
+                    </div>
+                    <div class="slds-visual-picker slds-visual-picker_vertical" style="width: 15rem; height: 10rem;">
+                        <input type="radio" id="template2-visual-picker" name="options" value="template2" onclick="{!c.handleTemplate2Selected}" />
+                        <label for="template2-visual-picker">
+                            <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center" style="background: #f3f2f2; width: 15rem; height: 10rem;">
+                                <span>
+                                    <!--<img id="template2" aura:id="template2" data-item-key="template2" src="{!$Resource.MarketingEmailRequestResources + '/MarketingEmailRequestResources/templates/template2.png'}"  />-->
+                                    <!--<span class="slds-text-heading_medium slds-m-bottom_x-small">Template 2</span>-->
+                                </span>
+                            </span>
+                            <span aura:id="template2_check" class="slds-icon_container slds-visual-picker__text-check">
+                                <c:svg class="slds-icon slds-icon-text-check slds-icon_x-small slds-icon_cream" ariaHidden="true" xlinkHref="{!$Resource.SLDS232 + '/assets/icons/utility-sprite/svg/symbols.svg#check'}" />
+                            </span>
+                        </label>
+                    </div>
+                    <div class="slds-visual-picker slds-visual-picker_vertical" style="width: 15rem; height: 10rem;">
+                        <input type="radio" id="template3-visual-picker" name="options" value="template3" onclick="{!c.handleTemplate3Selected}" />
+                        <label for="template3-visual-picker">
+                            <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center" style="background: #f3f2f2; width: 15rem; height: 10rem;">
+                                <span>
+                                    <!--<img id="template3" aura:id="template3" data-item-key="template3" src="{!$Resource.MarketingEmailRequestResources + '/MarketingEmailRequestResources/templates/template3.png'}"  />-->
+                                </span>
+                            </span>
+                            <span aura:id="template3_check" class="slds-icon_container slds-visual-picker__text-check">
+                                <c:svg class="slds-icon slds-icon-text-check slds-icon_x-small slds-icon_cream" ariaHidden="true" xlinkHref="{!$Resource.SLDS232 + '/assets/icons/utility-sprite/svg/symbols.svg#check'}" />
+                            </span>
+                        </label>
+                    </div>
+                    <div class="slds-visual-picker slds-visual-picker_vertical" style="width: 15rem; height: 10rem;">
+                        <input type="radio" id="template4-visual-picker" name="options" value="template4" onclick="{!c.handleTemplate4Selected}" />
+                        <label for="template4-visual-picker">
+                            <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center" style="background: #f3f2f2; width: 15rem; height: 10rem;">
+                                <span>
+                                    <!--<img id="template4" aura:id="template4" data-item-key="template4" src="{!$Resource.MarketingEmailRequestResources + '/MarketingEmailRequestResources/templates/template4.png'}"  />-->
+                                </span>
+                            </span>
+                            <span aura:id="template4_check" class="slds-icon_container slds-visual-picker__text-check">
+                                <c:svg class="slds-icon slds-icon-text-check slds-icon_x-small slds-icon_cream" ariaHidden="true" xlinkHref="{!$Resource.SLDS232 + '/assets/icons/utility-sprite/svg/symbols.svg#check'}" />
+                            </span>
+                        </label>
+                    </div>
+                    <div class="slds-visual-picker slds-visual-picker_vertical" style="width: 15rem; height: 10rem;">
+                        <input type="radio" id="template5-visual-picker" name="options" value="template5" onclick="{!c.handleTemplate5Selected}" />
+                        <label for="template5-visual-picker">
+                            <span class="slds-visual-picker__figure slds-visual-picker__text slds-align_absolute-center" style="background: #f3f2f2; width: 15rem; height: 10rem;">
+                                <span>
+                                    <!--<img id="template5" aura:id="template5" data-item-key="template5" src="{!$Resource.MarketingEmailRequestResources + '/MarketingEmailRequestResources/templates/template5.png'}"  />-->
+                                </span>
+                            </span>
+                            <span aura:id="template5_check" class="slds-icon_container slds-visual-picker__text-check">
+                                <c:svg class="slds-icon slds-icon-text-check slds-icon_x-small slds-icon_cream" ariaHidden="true" xlinkHref="{!$Resource.SLDS232 + '/assets/icons/utility-sprite/svg/symbols.svg#check'}" />
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </fieldset>            
+        </lightning:layoutItem>
+
+        <!-- Template layouts -->
+        <lightning:layoutItem size="8">
+            <div class="slds-m-top_medium slds-p-around_small glowing-box slds-hide">
+                <p class="slds-text-title_caps">[Optional] Add a message to send with the marketing materials</p>
+                <lightning:textarea name="emailheader" label="" value="{!v.emailHeaderMessage}" />
+            </div>
+            <div class="glowing-box slds-m-vertical_small">
+
+                <aura:if isTrue="{!v.selectedTemplate == 'template1'}">
+                    <div id="template1_banner" aura:id="template1_banner" class="slds-p-around_large scrollable-container">
+                        <div class="" >
+                            <aura:iteration items="{!v.selectedMaterials}" var="banner">
+                                <aura:if isTrue="{!banner.Id != undefined}">
+                                    <div id="{!banner.Id+'_container'}" class="slds-drop-zone slds-m-around_medium drop-box_content drop-box_horizontal" ondragover="{!c.handleOnDragOver}" ondrop="{!c.handleOnDrop}" onclick="{!c.handleDroppableItemOnClick}">
+                                        <div class="slds-drop-zone__container slds-is-hovered" style="z-index: 1;">
+                                            <div class="slds-drop-zone__actions">
+                                                <div class="slds-button-group" role="group">
+                                                    <button id="{!banner.Id}" class="slds-button slds-button_icon slds-button_icon-brand slds-button_icon-x-small" title="Remove" onclick="{!c.handleRemoveBannerButtonClick}">
+                                                        <c:svg class="slds-button__icon" xlinkHref="{!$Resource.SLDS232 + '/assets/icons/utility-sprite/svg/symbols.svg#delete'}" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!--<img id="{!banner.id}" src="{!$Resource.MarketingEmailRequestResources + banner.src}" />-->
+                                            <img id="{!banner.Id}" src="{!'/sfc/servlet.shepherd/version/download/' + banner.Id}" style="width: 100%;" />
+                                        </div>
+                                    </div>
+                                <aura:set attribute="else">
+                                    <div id="container" class="slds-drop-zone slds-m-around_medium drop-box drop-box_horizontal" ondragover="{!c.handleOnDragOver}" ondrop="{!c.handleOnDrop}" onclick="{!c.handleDroppableItemOnClick}">
+                                        <img id="image" src="" />
+                                    </div>
+                                </aura:set>
+                                </aura:if>
+                            </aura:iteration>
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.selectedTemplate == 'template2'}">
+                    <lightning:layout horizontalAlign="center" verticalAlign="center" multipleRows="true">
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <div class="slds-drop-zone slds-m-horizontal_medium drop-box drop-box_horizontal" />
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:layout verticalAlign="stretch" horizontalAlign="space">
+                                <lightning:layoutItem size="6">
+                                    <div class="slds-drop-zone slds-m-around_medium drop-box drop-box_vertical" />
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="6">
+                                    <div class="slds-drop-zone slds-m-vertical_medium drop-box drop-box_vertical" />
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </aura:if>
+
+                <aura:if isTrue="{!v.selectedTemplate == 'template3'}">
+                    <lightning:layout horizontalAlign="center" multipleRows="true">
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <div class="slds-drop-zone slds-m-horizontal_small drop-box drop-box_horizontal" />
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:layout verticalAlign="stretch" horizontalAlign="space">
+                                <lightning:layoutItem size="4">
+                                    <div class="slds-drop-zone slds-m-horizontal_small drop-box drop-box_vertical" />
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="8">
+                                    <div class="slds-drop-zone slds-m-horizontal_small drop-box drop-box_vertical" />
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </aura:if>
+                <aura:if isTrue="{!v.selectedTemplate == 'template4'}">
+                    <lightning:layout horizontalAlign="center" multipleRows="true">
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <div class="slds-drop-zone slds-m-horizontal_medium drop-box drop-box_horizontal" />
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="12" padding="around-small">
+                            <lightning:layout verticalAlign="stretch" horizontalAlign="space">
+                                <lightning:layoutItem size="4">
+                                    <div class="slds-drop-zone slds-m-horizontal_medium drop-box drop-box_vertical" />
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="4">
+                                    <div class="slds-drop-zone slds-m-horizontal_medium drop-box drop-box_vertical" />
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="4">
+                                    <div class="slds-drop-zone slds-m-horizontal_medium drop-box drop-box_vertical" />
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </aura:if>
+                <aura:if isTrue="{!v.selectedTemplate == 'template5'}">
+                    <lightning:layout verticalAlign="stretch" horizontalAlign="space">
+                        <lightning:layoutItem size="4">
+                            <div class="slds-drop-zone slds-m-around_medium drop-box drop-box_vertical-tall" />
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="4">
+                            <div class="slds-drop-zone slds-m-vertical_medium drop-box drop-box_vertical-tall" />
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="4">
+                            <div class="slds-drop-zone slds-m-around_medium drop-box drop-box_vertical-tall" />
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </aura:if>
+            </div>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="4">
+            <div class="slds-page-header glowing-box slds-m-around_small">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media slds-media_center">
+                            <div class="slds-media__figure">
+                                <lightning:icon iconName="utility:image" alternativeText="Materials" size="small" />
+                            </div>
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h1 class="slds-p-top_x-small">
+                                            <span class="slds-page-header__title slds-truncate slds-text-title_caps" title="Materials">Materials</span>
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="material-container" class="flex-container material-container glowing-box slds-m-horizontal_small">
+                <ul class="slds-has-dividers_top-space">
+                <aura:iteration items="{!v.materials}" var="m">
+                    <li class="slds-item flex-item slds-p-around_small slds-align_absolute-center">
+                        <div id="{!m.Id+'_spinner'}" class="spinner_container">
+                            <lightning:spinner alternativeText="Loading.." size="medium" />
+                        </div>
+                            <img id="{!m.Id}" src="{!'/sfc/servlet.shepherd/version/download/' + m.Id}" class="material" draggable="true" ondragstart="{!c.handleOnDragStart}" onclick="{!c.handleDraggableItemOnClick}" onload="{!c.handleImageOnLoad}" />
+
+                    </li>
+                </aura:iteration>
+                </ul>
+            </div>
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>	

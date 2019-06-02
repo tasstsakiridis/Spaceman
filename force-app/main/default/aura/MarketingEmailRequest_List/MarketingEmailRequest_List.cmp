@@ -1,0 +1,128 @@
+<aura:component>
+    <!-- String Attributes -->
+
+    <!-- Boolean Attributes -->
+    <aura:attribute name="isLoading" type="Boolean" default="false" />
+
+    <!-- List & Object Attributes -->
+    <aura:attribute name="requests" type="Marketing_Email_Request__c[]" default="[]" />
+
+    <div class="container">
+        <div class="slds-page-header">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <lightning:icon iconName="utility:email" alternativeText="Marketing Email Request" />
+                        </div>
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1 class="slds-p-top_x-small">
+                                        <span class="slds-page-header__title slds-truncate slds-text-title_caps large-heading" title="Recently Viewed">Marketing Email Request</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-page-header__col-actions">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                            <ul class="slds-button-group-list">
+                                <li>
+                                    <lightning:button label="New" onclick="{!c.handleNewClick}" />
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-meta">
+                    <p class="slds-page-header__meta-text">10 items • Updated 13 minutes ago</p>
+                </div>
+                <!--
+                <div class="slds-page-header__col-controls">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                            <div class="slds-dropdown-trigger slds-dropdown-trigger_click">
+                                <lightning:buttonIcon iconName="utility:settings" alternativeText="List View Controls" />
+                            </div>
+                        </div>
+                        <div class="slds-page-header__control">
+                            <div class="slds-dropdown-trigger slds-dropdown-trigger_click">
+                                <lightning:buttonIcon iconName="utility:down" alternativeText="More" />
+                            </div>
+                        </div>
+                        <div class="slds-page-header__control">
+                            <lightning:buttonIcon iconName="utility:edit" alternativeText="Edit List" />
+                        </div>
+                        <div class="slds-page-header__control">
+                            <lightning:buttonIcon iconName="utility:refresh" alternativeText="Refresh List" />
+                        </div>
+                        <div class="slds-page-header__control">
+                            <ul class="slds-button-group-list">
+                                <li>
+                                    <lightning:buttonIcon iconName="utility:chart" alternativeText="Charts" />
+                                </li>
+                                <li>
+                                    <lightning:buttonIcon iconName="utility:filterList" alternativeText="Filter list" />
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+    
+        <aura:if isTrue="{!v.isLoading}">
+            <lightning:spinner alternativeText="Loading..." />
+        <aura:set attribute="else">
+            <table class="slds-table slds-table_fixed-layout slds-table_bordered slds-no-row-hover slds-table_cell-buffer slds-table_striped slds-max-medium-table_stacked-horizontal table_hover">
+                <thead>
+                    <tr class="slds-text-title_caps">
+                        <th scope="col">
+                            <div class="slds-truncate" title="Name">Request Name</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Created On">Created On</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Sent On">Sent On</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Status">Status</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Created By">Created By</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.requests}" var="request">
+                        <tr class="slds-hint-parent" id="{!request.Id}" onclick="{!c.handleRowSelected}" data-id="{!request.Id}" >
+                            <th scope="row">
+                                <div class="slds-truncate" title="{!request.Name}" data-id="{!request.Id}">{!request.Name}</div>                                    	
+                            </th>
+                            <td>
+                                <div class="slds-truncate" title="{!request.CreateDate}" data-id="{!request.Id}"><lightning:formattedDateTime value="{!request.CreatedDate}" year="numeric" month="short" day="2-digit" hour="2-digit" weekday="long" minute="2-digit" hour12="true" /></div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate" title="{!request.Sent_Date__c}" data-id="{!request.Id}"><lightning:formattedDateTime value="{!request.Send_Date__c}" year="numeric" month="short" day="2-digit" hour="2-digit" weekday="long" minute="2-digit" hour12="true" /></div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate" title="{!request.Status__c}" data-id="{!request.Id}">{!request.Status__c}</div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate" title="{!request.CreatedBy}" data-id="{!request.Id}">{!request.CreatedBy.Name}</div>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+        </aura:set>
+        </aura:if>                        
+    </div>
+</aura:component>	

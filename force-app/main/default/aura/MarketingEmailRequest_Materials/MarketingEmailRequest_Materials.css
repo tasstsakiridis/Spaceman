@@ -1,0 +1,67 @@
+.THIS {
+}
+.THIS .drop-box {
+    background-color: #999;
+    border: 1px solid #333;
+    border-radius: 5px;
+}
+.THIS .drop-box_content {
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+}
+.THIS .drop-box_horizontal {
+    /*height: 300px;*/
+    /*width: 750px;*/
+    width: 90%;
+    min-height: 10rem;
+    margin: 20px auto;
+}
+.THIS .drop-box_vertical {
+    height: 30rem;
+}
+.THIS .drop-box_vertical-tall {
+    height: 40rem;
+}
+.THIS .glowing-box {
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.THIS .slds-icon_cream {
+    fill: #f3f2f2;
+}
+.THIS .material-container {
+    height: 800px;
+    overflow: scroll;
+}
+.THIS .scrollable-container {
+    overflow-y: scroll;
+}
+.THIS .flex-container {
+    align-content: space-around;
+    display: flex;
+    flex: row wrap;
+    justify-content: center;
+}
+.THIS .flex-item {
+    flex: none;
+}
+.THIS .material {
+    width: 90%;
+}
+.THIS .dragstart {
+    border: 2px solid #d3d3d3;
+    border-radius: 5px;
+}
+.THIS .drag-item-selected {
+	border:2px solid #ddd;
+	border-radius: 3px;
+	box-shadow: 0 0 6px #000099;
+    transition: all 200ms ease-out;
+    padding: 5px 10px;    
+}
+.THIS .spinner_container {
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+}

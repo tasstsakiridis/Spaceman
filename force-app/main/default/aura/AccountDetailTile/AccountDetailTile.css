@@ -1,0 +1,29 @@
+.THIS {
+
+}
+.THIS .card {
+    background-color: #f3f2f2;
+    border-radius: 5px;
+    width: 300px;
+    min-height: 175px;
+    max-height: 200px;
+    overflow-x: hidden;
+    padding: 0 3px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.THIS .selected {
+    background-color: #DBE2EA;
+    border: 5px solid #2068B0;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(32, 104, 176, 0.2), 0 6px 20px 0 rgba(32, 104, 176, 0.19);
+}
+.THIS .heading-small {
+    font-size: 0.875rem;
+}
+.THIS .wrappable-text {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+.THIS .warning-text {
+    color: #c23934;
+}

@@ -1,0 +1,35 @@
+<aura:component>
+    <!-- Boolean Attributes -->
+    <aura:attribute name="showContact" type="Boolean" default="false" />
+    <aura:attribute name="canRemoveAccount" type="Boolean" default="true" />
+    
+    <!-- List & Object Attributes -->
+    <aura:attribute name="account" type="Account" required="true" default="{}" />
+
+    <!-- Register Events -->
+    <aura:registerEvent name="bf_event_ItemSelected" type="c:bf_event_ItemSelected" />
+
+    <li class="slds-item" onclick="{!c.removeAccount}">
+        <div class="slds-media slds-media_center">
+            <div class="slds-media__figure">
+                <lightning:icon iconName="utility:close" size="small" alternativeText="Remove Account" />
+            </div>
+            <div class="slds-media__body">
+                <div class="slds-page-header__name">
+                    <div class="slds-page-header__name-title">
+                        <h1 class="slds-p-top_x-small">
+                            <aura:if isTrue="{!$Browser.formFactor == 'DESKTOP'}">
+                                <p class="slds-page-header__title slds-hyphenate slds-text-title_caps slds-wrap" title="{!v.account.Name}" >{!v.account.Name}</p>
+                                <p class="slds-wrap">{!v.account.AccountName}</p>
+                            <aura:set attribute="else">
+                                <span class="slds-page-header__title slds-hyphenate slds-text-title_caps slds-hyphenate" title="{!v.account.Name}" >{!v.account.Name}</span>
+                            </aura:set>
+                            </aura:if>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+
+</aura:component>	

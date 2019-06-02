@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="Event template" >
+    <aura:attribute name="itemType" type="String" default="account" />
+    <aura:attribute name="item" type="Object" />
+    <aura:attribute name="items" type="List" />
+</aura:event>

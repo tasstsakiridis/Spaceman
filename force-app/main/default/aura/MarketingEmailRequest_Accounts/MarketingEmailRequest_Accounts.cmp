@@ -1,0 +1,105 @@
+<aura:component controller="MarketingEmailRequest_Controller">
+
+    <!-- String Attributes -->
+    <aura:attribute name="f_accountName" type="String" default="" />
+    <aura:attribute name="f_actionableSegment" type="String" default="" />    
+    <aura:attribute name="f_bannerGroup" type="String" default="" />
+    <aura:attribute name="f_channel" type="String" default="" />
+    <aura:attribute name="f_status" type="String" default="" />
+
+    <!-- Boolean Attributes -->
+    <aura:attribute name="isLoading" type="Boolean" default="false" />
+    <aura:attribute name="isSearching" type="Boolean" default="false" />
+    <aura:attribute name="hasMorePages" type="Boolean" default="true" />
+
+    <!-- Integer Attributes -->
+    <aura:attribute name="numberOfAccount" type="Integer" default="0" />
+    <aura:attribute name="pageSize" type="Integer" default="50" />
+    <aura:attribute name="page" type="Integer" default="1" />
+    <aura:attribute name="pages" type="Integer" default="0" />
+    <aura:attribute name="total" type="Integer" default="0" />
+
+    <!-- List & Object Attributes -->    
+    <aura:attribute name="f_ActionableSegmentOptions" type="List" default="[{'label':'All','value':'all'}]" />
+    <aura:attribute name="f_BannerGroupOptions" type="List" default="[{'label':'All','value':'all'}]" />
+    <aura:attribute name="f_ChannelOptions" type="List" default="[{'label':'All','value':'all'}]" />
+    <aura:attribute name="f_StatusOptions" type="List" default="[{'label':'All','value':'all'}]" />
+    <aura:attribute name="accounts" type="List" default="[]" />
+    <aura:attribute name="accountList" type="List" default="[]" />
+    <aura:attribute name="selectedAccounts" type="List" default="[]" />
+    <aura:attribute name="user" type="User" />
+
+    <!-- Component Lifecycle events -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- Handle Component Events -->
+    <aura:handler name="bf_event_ItemSelected" event="c:bf_event_ItemSelected" action="{!c.handleItemSelectedEvent}" />
+    <aura:handler name="bf_event_ListPageChange" event="c:bf_event_ListPageChange" action="{!c.handleListPageChangeEvent}" />    
+
+    <!-- Register events component will fire -->
+    <aura:registerEvent name="bf_event_GetListData" type="c:bf_event_GetListData" />   
+
+    <!-- Public methods -->
+    <aura:method name="getSelectedAccounts" action="{!c.getSelectedAccounts}" access="PUBLIC">
+    </aura:method>
+
+    <aura:if isTrue="{!v.isLoading}">
+        <lightning:spinner size="large" alternativeText="Submitting... Please wait." />
+    </aura:if>
+
+    <lightning:layout>
+        <lightning:layoutItem size="3" smallDeviceSize="3" mediumDeviceSize="2">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem size="12" padding="around-small">
+                    <div onkeyup="{!c.handleKeyUp}">
+                        <lightning:input name="i_accountName" aura:id="i_accountName" label="Account Name" isLoading="{!v.isSearching}" type="search" onchange="{!c.handleAccountNameFilterChange}" />
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12" padding="around-small">
+                    <lightning:combobox name="i_actionableSegment" label="Actionable Segment" value="f_actionableSegment" placeholder="" options="{!v.f_ActionableSegmentOptions}" onchange="{!c.handleActionableSegmentFilterChange}" />
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12" padding="around-small">
+                    <lightning:combobox name="i_bannerGroup" label="Banner Group" value="f_bannerGroup" placeholder="" options="{!v.f_BannerGroupOptions}" onchange="{!c.handleBannerGroupFilterChange}"  />
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12" padding="around-small">
+                    <lightning:combobox name="i_channels" label="Channel" value="f_channel" placeholder="" options="{!v.f_ChannelOptions}" onchange="{!c.handleChannelFilterChange}" />
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12" padding="around-small">
+                    <lightning:combobox name="i_status" label="Status" value="f_status" placeholder="" options="{!v.f_StatusOptions}" onchange="{!c.handleStatusFilterChange}" />
+                </lightning:layoutItem>
+                <lightning:layoutItem size="12" padding="around-small">
+                    <lightning:button name="btnFilter" label="Filter" onclick="{!c.handleFilterButtonClick}" class="slsd-float_right" />
+                </lightning:layoutItem>
+            </lightning:layout>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="9" smallDeviceSize="9" mediumDeviceSize="8" class="slds-m-vertical_small">
+            <aura:renderIf isTrue="{!v.accounts.length > 0}">
+                <c:bfPaginator pathPrefix="{!v.pathPrefix}" page="{!v.page}" pages="{!v.pages}" total="{!v.total}" hasMorePages="{!v.hasMorePages}" />                    
+            </aura:renderIf>
+
+            <ui:scrollerWrapper class="scrollerSize">
+            <ul id="accountGrid" aura:id="accountGrid" class="slds-grid slds-wrap">
+                <aura:iteration items="{!v.accounts}" var="a">
+                    <c:AccountDetailTile account="{!a.account}" accountState="{!a.isSelected}" accountNameFilter="{!v.f_accountName}" channel="{!v.f_channel}" actionableSegment="{!v.f_actionableSegment}" bannerGroup="{!v.f_bannerGroup}" status="{!v.f_status}" />                        
+                </aura:iteration>
+            </ul>
+            </ui:scrollerWrapper>            
+        </lightning:layoutItem>
+        <aura:if isTrue="{!$Browser.formFactor != 'PHONE'}">
+            <lightning:layoutItem size="2" class="slds-m-vertical_small">
+                <lightning:card title="Accounts" class="summary-container" >
+                    <ul id="selectedAccountsList" class="slds-has-dividers_bottom-space slds-m-around_small slds-p-vertical_small">
+                        <aura:if isTrue="{!v.selectedAccounts.length > 0}">
+                            <li class="slds-item"><lightning:button variant='brand' label="CLEAR ALL" onclick="{!c.handleClearAllButtonClick}" /></li>
+                        </aura:if>
+                        <aura:iteration items="{!v.selectedAccounts}" var="selectedAccount">
+                            <c:MarketingEmailRequest_AccountListItem account="{!selectedAccount}" />
+                        </aura:iteration>
+                    </ul>
+        
+                </lightning:card>
+
+            </lightning:layoutItem>
+        </aura:if>
+    </lightning:layout>
+</aura:component>	

@@ -1,0 +1,15 @@
+<template>
+    <template if:true={options}>
+        <lightning-combobox
+            label="{componentLabel}"
+            name="{componentName}"
+            value={selectedValue}
+            placeholder={placeholderText}
+            options={options}
+            onchange={handleChange}>
+        </lightning-combobox>    
+    </template>
+    <template if:true={error}>
+        <span>{error}</span>
+    </template>
+</template>

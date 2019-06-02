@@ -1,0 +1,80 @@
+<aura:component>
+    <!-- String Attributes -->
+    <aura:attribute name="accountNameFilter" type="String" default="" />
+    <aura:attribute name="channel" type="String" default="" />
+    <aura:attribute name="actionableSegment" type="String" default="" />
+    <aura:attribute name="bannerGroup" type="String" default="" />
+    <aura:attribute name="status" type="String" default="" />
+
+    <!-- Boolean Attributes -->
+    <aura:attribute name="accountState" type="Boolean" default="false" />
+    <aura:attribute name="canSelectAccount" type="Boolean" default="false" />
+    <aura:attribute name="hasContacts" type="Boolean" default="false" />
+    <aura:attribute name="hasMultipleContacts" type="Boolean" default="false" />
+
+    <!-- List & Object attributes -->
+    <aura:attribute name="account" type="Account" required="true" default="{}" />
+    <aura:attribute name="contact" type="Contact" />
+    <aura:attribute name="contacts" type="List" default="[]" />
+    <aura:attribute name="selectedContacts" type="List" default="[]" />
+
+    <!-- Handle Init -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- Handle Attribute value changes -->
+    <!--<aura:handler name="change" value="{!v.accountNameFilter}" action="{!c.handleAttributeValueChange}" />-->
+    <!--<aura:handler name="change" value="{!v.channel}" action="{!c.handleAttributeValueChange}" />-->
+    <!--<aura:handler name="change" value="{!v.actionableSegment}" action="{!c.handleAttributeValueChange}" />-->
+    <!--<aura:handler name="change" value="{!v.bannerGroup}" action="{!c.handleAttributeValueChange}" />-->
+    <!--<aura:handler name="change" value="{!v.status}" action="{!c.handleAttributeValueChange}" />-->
+    <!--<aura:handler name="change" value="{!v.accountState}" action="{!c.handleAccountStateChange}" />-->
+    <aura:handler name="change" value="{!v.account}" action="{!c.handleAccountChange}" />
+    
+    <!-- Register Event Handlers -->
+    <aura:registerEvent name="bf_event_ItemSelected" type="c:bf_event_ItemSelected" />
+
+
+    <li id="{!v.account.Id}" aura:id="theItem" class="slds-item slds-m-around_x-small">
+        <lightning:card aura:id="theCard" class="slds-p-around_small card">
+            <aura:set attribute="title">
+                <aura:renderIf isTrue="{!v.accountState}">
+                    <lightning:icon iconName="utility:groups" size="small" />
+                </aura:renderIf>
+            </aura:set>
+            <aura:set attribute="actions">
+                <aura:if isTrue="{!v.canSelectAccount}">
+                    <lightning:buttonStateful variant="text" labelWhenOff="select" labelWhenOn="remove" labelWhenHover="" iconNameWhenOff="" iconNameWhenOn="utility:check" iconNameWhenHover="" state="{!v.accountState}" onclick="{!c.handleAccountSelectedClick}" />
+                </aura:if>
+            </aura:set>
+
+            <p class="slds-text-body_small">{!v.account.AccountNumber}</p>
+            <p class="heading-small wrappable-text slds-m-bottom_x-small">{!v.account.Name}</p>
+            <aura:if isTrue="{!v.hasContacts}">
+                <aura:if isTrue="{!v.hasMultipleContacts}">
+                    <aura:iteration items="{!v.contacts}" var="contact">
+                        <lightning:input type="checkbox" label="{!contact.label}" name="{!contact.Id}" checked="{!contact.selected}" disabled="{!or(contact.disabled,v.accountState)}" onchange="{!c.handleContactChange}" />
+                    </aura:iteration>
+                    <!--
+                    <lightning:checkboxGroup name="contacts" label="" options="{!v.contacts}" value="{!v.selectedContacts}" onchange="{!c.handleContactChange}" />
+                    <lightning:combobox name="contacts" variant="label-hidden" label="" value="{!v.contact.Id}" placeholder="Select a contact" options="{!v.contacts}" onchange="{!c.handleContactChange}" />
+                    <div class="slds-p-around_small">
+                        <p class="slds-truncate">{!v.contact.Name}</p>
+                        <p class="slds-truncate">{!v.contact.Email}</p>    
+                    </div>
+                    --> 
+
+                    <!--<p class="slds-m-around_medium warning-text">Account has multiple primary digital contacts</p>-->
+                <aura:set attribute="else">
+                    <div class="slds-p-around_small">
+                        <p class="slds-truncate">{!v.contact.Name}</p>
+                        <p class="slds-truncate">{!v.contact.Email}</p>    
+                    </div>
+                </aura:set>
+                </aura:if>
+            <aura:set attribute="else">
+                <p class="slds-m-around_medium warning-text">Can't select this Account, it has no Primary Digital Contacts.</p>
+            </aura:set>
+            </aura:if>
+        </lightning:card>
+    </li>
+</aura:component>	

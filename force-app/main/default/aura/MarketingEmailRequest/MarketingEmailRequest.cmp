@@ -1,0 +1,168 @@
+<aura:component implements="force:appHostable" access="global" controller="MarketingEmailRequest_Controller">
+
+    <!-- String Attributes -->
+    <aura:attribute name="requestId" type="String" default="" />
+    <aura:attribute name="accountId" type="String" default="" />
+    <aura:attribute name="actuableSegment" type="String" default="" />
+    <aura:attribute name="emailTemplateId" type="String" default="" />
+    <aura:attribute name="currentStep" type="String" default="accounts" />
+
+    <!-- Boolean Attributes -->
+    <aura:attribute name="isLoading" type="Boolean" default="false" />
+    <aura:attribute name="isWorking" type="Boolean" default="false" />
+    <aura:attribute name="isSelectingAccounts" type="Boolean" default="true" />
+    <aura:attribute name="isSelectingMaterial" type="Boolean" default="false" />
+    <aura:attribute name="hasMorePages" type="Boolean" default="true" />
+
+    <!-- Integer Attributes -->
+    <aura:attribute name="numberOfAccounts" type="Integer" default="0" />
+    <aura:attribute name="pageSize" type="Integer" default="50" />
+    <aura:attribute name="page" type="Integer" default="1" />
+    <aura:attribute name="pages" type="Integer" default="0" />
+    <aura:attribute name="total" type="Integer" default="0" />
+
+    <!-- List & Object Attributes -->
+    <aura:attribute name="accounts" type="Account[]" default="[]" />
+    <aura:attribute name="channelOptions" type="List" default="[]" />
+    <aura:attribute name="actionableSegmentOptions" type="List" default="[]" />
+    <aura:attribute name="bannerGroupOptions" type="List" default="[]" />
+    <aura:attribute name="statusOptions" type="List" default="[]" />
+    <aura:attribute name="bannerGroups" type="Banner_Groups__c[]" />
+    <aura:attribute name="emailTemplates" type="List" />
+    <aura:attribute name="materials" type="List" />
+    <aura:attribute name="requests" type="Marketing_Email_Request__c[]" default="[]" />
+    <aura:attribute name="user" type="User" />
+    <aura:attribute name="selectedAccounts" type="List" default="[]" />
+    <aura:attribute name="selectedMaterials" type="List" default="[{}]" />
+
+    <!-- Component Lifecycle events -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- Handle Component Events -->
+    <aura:handler name="bf_event_GetListData" event="c:bf_event_GetListData" action="{!c.handleGetListDataEvent}" />
+
+    <!-- Notifications library -->
+    <lightning:notificationsLibrary aura:id="notifLib" />
+
+    <aura:if isTrue="{!v.isWorking}">
+        <lightning:spinner size="large" alternativeText="Submitting... Please wait." />
+    </aura:if>
+
+    <div class="container slds-m-around_small" aura:id="marketingEmailRequestList">
+        <div class="slds-page-header">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <lightning:icon iconName="utility:email" alternativeText="Marketing Email Request" />
+                        </div>
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1 class="slds-p-top_x-small">
+                                        <span class="slds-page-header__title slds-truncate slds-text-title_caps large-heading" title="Recently Viewed">Marketing Email Request</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-page-header__col-actions">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                            <ul class="slds-button-group-list">
+                                <aura:if isTrue="{!v.currentStep=='accounts'}">
+                                    <li>                                    
+                                        <lightning:button name="materials" label="Select Templates &amp; Materials" iconName="utility:image" iconPosition="left" onclick="{!c.handleActionButtonClick}" />
+                                    </li>            
+                                </aura:if>
+                                <aura:if isTrue="{!v.currentStep=='materials'}">
+                                    <li>                                    
+                                        <lightning:button name="accounts" label="Select Accounts" iconName="utility:groups" iconPosition="left" onclick="{!c.handleActionButtonClick}" />
+                                    </li>            
+                                    <li>                                    
+                                        <lightning:button name="summary" label="View Summary" iconName="utility:summary" iconPosition="left" onclick="{!c.handleActionButtonClick}" />
+                                    </li>            
+                                </aura:if>
+                                <aura:if isTrue="{!v.currentStep=='summary'}">
+                                    <li>                                    
+                                        <lightning:button name="accounts" label="Select Accounts" iconName="utility:groups" iconPosition="left" onclick="{!c.handleActionButtonClick}" />
+                                    </li>            
+                                    <li>                                    
+                                        <lightning:button name="materials" label="Select Templates &amp; Materials" iconName="utility:image" iconPosition="left" onclick="{!c.handleActionButtonClick}" />
+                                    </li>            
+                                    <li>                                    
+                                        <lightning:button name="submit" label="Submit" iconName="utility:email" iconPosition="left" onclick="{!c.handleActionButtonClick}" />
+                                    </li> 
+                                </aura:if>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-meta">
+                    <p class="slds-page-header__meta-text">
+                        <aura:if isTrue="{!v.currentStep=='accounts'}">
+                            Select the account and contacts to email.  Tap/Click the <i><b>Select Templates &amp; Materials</b></i> button to configure your email.
+                        </aura:if>
+                        <aura:if isTrue="{!v.currentStep=='materials'}">
+                            Select a template, the materials to include and their placement in the template. Tap/Click the <i><b>Summary</b></i> button to view a summary of your email request.
+                        </aura:if>
+                        <aura:if isTrue="{!v.currentStep=='summary'}">
+                            Tap/Click the <i><b>Submit</b></i> button to submit your email request and have it processed.
+                        </aura:if>
+
+                    </p>
+                </div>
+                <!--
+                <div class="slds-page-header__col-controls">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                            <div class="slds-dropdown-trigger slds-dropdown-trigger_click">
+                                <lightning:buttonIcon iconName="utility:settings" alternativeText="List View Controls" />
+                            </div>
+                        </div>
+                        <div class="slds-page-header__control">
+                            <div class="slds-dropdown-trigger slds-dropdown-trigger_click">
+                                <lightning:buttonIcon iconName="utility:down" alternativeText="More" />
+                            </div>
+                        </div>
+                        <div class="slds-page-header__control">
+                            <lightning:buttonIcon iconName="utility:edit" alternativeText="Edit List" />
+                        </div>
+                        <div class="slds-page-header__control">
+                            <lightning:buttonIcon iconName="utility:refresh" alternativeText="Refresh List" />
+                        </div>
+                        <div class="slds-page-header__control">
+                            <ul class="slds-button-group-list">
+                                <li>
+                                    <lightning:buttonIcon iconName="utility:chart" alternativeText="Charts" />
+                                </li>
+                                <li>
+                                    <lightning:buttonIcon iconName="utility:filterList" alternativeText="Filter list" />
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+    
+        <aura:if isTrue="{!v.isLoading}">
+            <lightning:spinner alternativeText="Loading..." />
+        <aura:set attribute="else">
+            <aura:if isTrue="{!v.currentStep == 'accounts'}">
+                <c:MarketingEmailRequest_Accounts aura:id="mer_Accounts" selectedAccounts="{!v.selectedAccounts}" user="{!v.user}" f_ChannelOptions="{!v.channelOptions}" f_ActionableSegmentOptions="{!v.actionableSegmentOptions}" f_BannerGroupOptions="{!v.bannerGroupOptions}" f_StatusOptions="{!v.statusOptions}" page="{!v.page}" hasMorePages="{!v.hasMorePages}" pages="{!v.pages}" total="{!v.total}" />
+            </aura:if>
+            <aura:if isTrue="{!v.currentStep == 'materials'}">
+                <c:MarketingEmailRequest_Materials aura:id="mer_Materials" materials="{!v.materials}" selectedMaterials="{!v.selectedMaterials}" user="{!v.user}" />
+            </aura:if>
+            <aura:if isTrue="{!v.currentStep == 'summary'}">
+                <c:MarketingEmailRequest_Summary aura:id="mer_Summary" selectedAccounts="{!v.selectedAccounts}" selectedMaterials="{!v.selectedMaterials}" user="{!v.user}" />
+            </aura:if>
+        </aura:set>
+        </aura:if>                        
+    </div>            
+</aura:component>	
