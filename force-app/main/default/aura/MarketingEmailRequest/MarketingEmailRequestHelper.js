@@ -229,6 +229,7 @@
         
         component.set("v.isWorking", true);
         console.log('[MarketingEmailRequest.helper.submitEmailRequest] accounts', selectedAccounts);
+        console.log('[MarketingEmailRequest.helper.submitEmailRequest] materials', materials);
 
         var requests = [];
         var request;
@@ -236,18 +237,21 @@
         try {
         for(var i = 0; i < selectedAccounts.length; i++) {
             for(var j = 0; j < selectedAccounts[i].Contacts.length; j++) {
-                request = {
-                    'SObjectType':'Marketing_Email_Request__c',
-                    'Status__c' : 'New',
-                    'Contact__c': selectedAccounts[i].Contacts[j].Id,
-                    'Account__c': selectedAccounts[i].Id,
-                    'Template_Customer_Key__c' : 'c76f6503-fd71-4289-91ed-502d4c9c3a53',                
-                };
-                for(var m = 0; m < materials.length; m++) {
-                    request['Section_'+(m+1)+'_Image_Customer_Key__c'] = materials[m];
+                if (selectedAccounts[i].Contacts[j].selected) {
+                    request = {
+                        'SObjectType':'Marketing_Email_Request__c',
+                        'Status__c' : 'New',
+                        'Contact__c': selectedAccounts[i].Contacts[j].Id,
+                        'Account__c': selectedAccounts[i].Id,
+                        'Template_Customer_Key__c' : 'c76f6503-fd71-4289-91ed-502d4c9c3a53',                
+                    };                
+                    for(var m = 0; m < materials.length; m++) {
+                        request['Section_'+(m+1)+'_Image_Customer_Key__c'] = materials[m];
+                    }
+
+                    requests.push(request);
                 }
 
-                requests.push(request);
             }
             //contacts.push({'Id':selectedAccounts[i].Contact.Id, 'AccountId':selectedAccounts[i].Id});
         }

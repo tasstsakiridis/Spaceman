@@ -71,6 +71,7 @@
         } else if (itemType == 'update_account') {
             for (var i = 0; i < selectedAccounts.length; i++) {
                 if (selectedAccounts[i].Id == item.Id) {
+                    console.log('[MarketingEmailRequest.Accounts.controller.handleItemSelected] item.Contacts', item.Contacts);
                     selectedAccounts[i].Contacts = item.Contacts;
                     break;
                 }

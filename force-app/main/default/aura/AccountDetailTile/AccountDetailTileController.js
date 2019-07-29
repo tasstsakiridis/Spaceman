@@ -38,15 +38,15 @@
         let checkboxValues = event.getParam('value');
         let contacts = component.get("v.contacts");
         console.log('[AccountDetailTile.controller.handleContactChange] checkboxValues', checkboxValues);
-        console.log('[AccountDetailTile.controller.handleContactChange] selectedContact', selectedContacts);
-        console.log('[AccountDetailTile.controller.handleContactChange] contacts', contacts);
         var contact = {};
         var selectedContacts = [];
         for(var i = 0; i < contacts.length; i++) {
-            //if (contacts[i].selected) {
+            if (contacts[i].selected) {
                 selectedContacts.push({'Id':contacts[i].Id, 'Name':contacts[i].Name, 'Email':contacts[i].Email, 'AccountId':contacts[i].AccountId, 'AccountName':contacts[i].AccountName, 'selected':contacts[i].selected});
-            //}
+            }
         }
+        console.log('[AccountDetailTile.controller.handleContactChange] selectedContact', selectedContacts);
+        console.log('[AccountDetailTile.controller.handleContactChange] contacts', contacts);
         let accountState = component.get("v.accountState");
         if (accountState) {
             let action = component.getEvent("bf_event_ItemSelected");
