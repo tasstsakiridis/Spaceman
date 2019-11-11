@@ -49,6 +49,7 @@
     </aura:if>
 
     <div class="container slds-m-around_small" aura:id="marketingEmailRequestList">
+        <ui:scrollerWrapper class="scroller">
         <div class="slds-page-header">
             <div class="slds-page-header__row">
                 <div class="slds-page-header__col-title">
@@ -163,6 +164,7 @@
                 <c:MarketingEmailRequest_Summary aura:id="mer_Summary" selectedAccounts="{!v.selectedAccounts}" selectedMaterials="{!v.selectedMaterials}" user="{!v.user}" />
             </aura:if>
         </aura:set>
-        </aura:if>                        
+        </aura:if>      
+        </ui:scrollerWrapper>                          
     </div>            
 </aura:component>	

@@ -11,9 +11,11 @@
     <!-- Handle Object Lifecycle events -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
+    <div aura:id="summary_container" >
     <lightning:layout horizontalAlign="space">
         <lightning:layoutItem size="6" padding="around-small">
             <lightning:card title="Accounts" class="summary-container" >
+                <ui:scrollerWrapper class="summary-scroller">
                 <ul id="selectedAccountsList" class="slds-has-dividers_bottom-space slds-m-around_small slds-p-vertical_small">
                     <aura:iteration items="{!v.selectedAccounts}" var="account">
                         <li class="slds-item">
@@ -35,13 +37,14 @@
                     </aura:iteration>
                 
                 </ul>
-    
+                </ui:scrollerWrapper>
             </lightning:card>
             
         </lightning:layoutItem>
         <lightning:layoutItem size="6" padding="around-small">
             <lightning:card title="Materials" class="summary-container">
                 <aura:if isTrue="{!v.selectedMaterials.length > 0}">
+                    <ui:scrollerWrapper class="summary-scroller">
                     <aura:iteration items="{!v.selectedMaterials}" var="material">
                         <aura:if isTrue="{!material.Id != null}">
                         <div id="{!material.Id+'_container'}" class="" >
@@ -51,6 +54,7 @@
                         </div>
                         </aura:if>
                     </aura:iteration>
+                    </ui:scrollerWrapper>
                 <aura:set attribute="else">
                     <div class="slds-text-title_caps slds-align_absolute-center" style="min-height: 300px;" >
                         No Materials Selected.
@@ -61,4 +65,5 @@
             </lightning:card>
         </lightning:layoutItem>
     </lightning:layout>
+    </div>    
 </aura:component>	

@@ -12,3 +12,6 @@
 .THIS .uppercase-text {
     text-transform: uppercase;
 }
+.THIS .scroller {
+    height: 800px;
+}

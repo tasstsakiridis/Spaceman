@@ -7,6 +7,10 @@
         
     },
 
+    handleOnTouchMove: function(component, event, helper) {
+        event.stopPropagation();
+    },
+
     /**
      * Handle button clicks
      */

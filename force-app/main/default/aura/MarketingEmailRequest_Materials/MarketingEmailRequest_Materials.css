@@ -30,8 +30,11 @@
     fill: #f3f2f2;
 }
 .THIS .material-container {
-    height: 800px;
+    height: 600px;
     overflow: scroll;
+}
+.THIS .material-scroller {
+    height: 600px;
 }
 .THIS .scrollable-container {
     overflow-y: scroll;

@@ -244,17 +244,19 @@
             </div>
 
             <div id="material-container" class="flex-container material-container glowing-box slds-m-horizontal_small">
-                <ul class="slds-has-dividers_top-space">
-                <aura:iteration items="{!v.materials}" var="m">
-                    <li class="slds-item flex-item slds-p-around_small slds-align_absolute-center">
-                        <div id="{!m.Id+'_spinner'}" class="spinner_container">
-                            <lightning:spinner alternativeText="Loading.." size="medium" />
-                        </div>
-                            <img id="{!m.Id}" src="{!'/sfc/servlet.shepherd/version/download/' + m.Id}" class="material" draggable="true" ondragstart="{!c.handleOnDragStart}" onclick="{!c.handleDraggableItemOnClick}" onload="{!c.handleImageOnLoad}" />
+                <ui:scrollerWrapper class="material-scroller">
+                    <ul class="slds-has-dividers_top-space">
+                    <aura:iteration items="{!v.materials}" var="m">
+                        <li class="slds-item flex-item slds-p-around_small slds-align_absolute-center">
+                            <div id="{!m.Id+'_spinner'}" class="spinner_container">
+                                <lightning:spinner alternativeText="Loading.." size="medium" />
+                            </div>
+                                <img id="{!m.Id}" src="{!'/sfc/servlet.shepherd/version/download/' + m.Id}" class="material" draggable="true" ondragstart="{!c.handleOnDragStart}" onclick="{!c.handleDraggableItemOnClick}" onload="{!c.handleImageOnLoad}" />
 
-                    </li>
-                </aura:iteration>
-                </ul>
+                        </li>
+                    </aura:iteration>
+                    </ul>
+                </ui:scrollerWrapper>                
             </div>
         </lightning:layoutItem>
     </lightning:layout>
